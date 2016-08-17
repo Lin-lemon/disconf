@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage;
  * @version 1.0.0
  */
 @Service
-public class MailBean implements InitializingBean {
+public class MailBean {
 
     protected static final Logger LOG = LoggerFactory.getLogger(MailBean.class);
 
