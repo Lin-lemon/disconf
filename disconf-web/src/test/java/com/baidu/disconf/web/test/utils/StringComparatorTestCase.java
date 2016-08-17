@@ -18,9 +18,9 @@ import difflib.Chunk;
  */
 public class StringComparatorTestCase {
 
-    private final String original = "coe.baiFaCoe=1.3\r\ncoe.yuErBaoCoe=1.2";
+    private final String original = "coe.baiFaCoe=1.3\r\ncoe.yuErBaoCoe=1.2\r\ncoe.yuErBaoCoe=1.2";
 
-    private final String revised = "coe.baiFaCoe=1.2\r\ncoe.yuErBaoCoe=1.2";
+    private final String revised = "coe.baiFaCoe=1.2\r\ncoe.yuErBaoCoe=1.2\r\ncoe.yuErBaoCoe=1.3";
 
     @Test
     public void shouldGetChangesBetweenFiles() {

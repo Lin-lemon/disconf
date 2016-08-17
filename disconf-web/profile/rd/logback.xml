@@ -4,8 +4,6 @@
 
     <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
 
-    <property name="log.base" value="./log/disconf-web"/>
-    <property name="log.monitor" value="./log/monitor"/>
     <property resource="rabbit.properties"/>
 
     <jmxConfigurator/>
@@ -19,11 +17,11 @@
 
     <appender name="logfile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.base}.log</File>
+        <File>${catalina.base}/logs/disconf-web.log</File>
         <Encoding>UTF-8</Encoding>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${log.base}.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <FileNamePattern>${catalina.base}/logs/disconf-web.log.%d{yyyy-MM-dd}</FileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n</pattern>
@@ -33,10 +31,10 @@
     <appender name="monitorlog"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Encoding>UTF-8</Encoding>
-        <File>${log.monitor}.log</File>
+        <File>${catalina.base}/logs/monitor.log</File>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${log.base}.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <FileNamePattern>${catalina.base}/logs/monitor.log.%d{yyyy-MM-dd}</FileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n</pattern>

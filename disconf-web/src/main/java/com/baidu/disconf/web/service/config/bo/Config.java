@@ -75,4 +75,17 @@ public class Config extends BaseObject<Long> {
     @Column(value = Columns.UPDATE_TIME)
     private String updateTime;
 
+    @Override
+    public String toString() {
+        return "Config{" +
+                "type=" + type +
+                ", status=" + status +
+                ", name='" + name + '\'' +
+                ", appId=" + appId +
+                ", version='" + version + '\'' +
+                ", envId=" + envId +
+                ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                '}';
+    }
 }

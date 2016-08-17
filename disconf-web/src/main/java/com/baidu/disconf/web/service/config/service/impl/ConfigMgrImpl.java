@@ -1,24 +1,5 @@
 package com.baidu.disconf.web.service.config.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
 import com.baidu.disconf.web.common.Constants;
 import com.baidu.disconf.web.config.ApplicationPropertyConfig;
@@ -49,6 +30,19 @@ import com.baidu.ub.common.db.DaoPageResult;
 import com.github.knightliao.apollo.utils.data.GsonUtils;
 import com.github.knightliao.apollo.utils.io.OsUtil;
 import com.github.knightliao.apollo.utils.time.DateUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author liaoqiqi
@@ -107,13 +101,12 @@ public class ConfigMgrImpl implements ConfigMgr {
      * 配置文件的整合
      *
      * @param confListForm
-     *
      * @return
      */
     public List<File> getDisconfFileList(ConfListForm confListForm) {
 
         List<Config> configList =
-                configDao.getConfigList(confListForm.getAppId(), confListForm.getEnvId(), confListForm.getVersion(),true);
+                configDao.getConfigList(confListForm.getAppId(), confListForm.getEnvId(), confListForm.getVersion(), true);
 
         // 时间作为当前文件夹
         String curTime = DateUtils.format(new Date(), DataFormatConstants.COMMON_TIME_FORMAT);
@@ -247,7 +240,6 @@ public class ConfigMgrImpl implements ConfigMgr {
      * 转换成配置返回
      *
      * @param config
-     *
      * @return
      */
     private ConfListVo convert(Config config, String appNameString, String envName, ZkDisconfData zkDisconfData) {
@@ -407,17 +399,13 @@ public class ConfigMgrImpl implements ConfigMgr {
      * 更新 配置项/配置文件 的值
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RuntimeException.class)
     public String updateItemValue(Long configId, String value) {
 
         Config config = getConfigById(configId);
         String oldValue = config.getValue();
 
-        //
-        // 配置数据库的值 encode to db
-        //
-        configDao.updateValue(configId, CodeUtils.utf8ToUnicode(value));
-        configHistoryMgr.createOne(configId, oldValue, CodeUtils.utf8ToUnicode(value));
+        // 更新数据库中配置文件
+        updateItemValue(configId, value, oldValue);
 
         //
         // 发送邮件通知
@@ -440,6 +428,15 @@ public class ConfigMgrImpl implements ConfigMgr {
         return "修改成功";
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RuntimeException.class)
+    private void updateItemValue(Long configId, String value, String oldValue) {
+        //
+        // 配置数据库的值 encode to db
+        //
+        configDao.updateValue(configId, CodeUtils.utf8ToUnicode(value));
+        configHistoryMgr.createOne(configId, oldValue, CodeUtils.utf8ToUnicode(value));
+    }
+
     /**
      * 主要用于邮箱发送
      *
@@ -456,7 +453,6 @@ public class ConfigMgrImpl implements ConfigMgr {
      *
      * @param newValue
      * @param identify
-     *
      * @return
      */
     private String getNewValue(String newValue, String identify, String htmlClick) {

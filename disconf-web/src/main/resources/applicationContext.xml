@@ -67,6 +67,20 @@
         <property name="domain" value="${domain}"/>
     </bean>
 
+    <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${EMAIL_HOST}"/>
+        <property name="port" value="${EMAIL_PORT}"/>
+        <property name="username" value="${EMAIL_HOST_USER}"/>
+        <property name="password" value="${EMAIL_HOST_PASSWORD}"/>
+
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+
     <!-- import -->
     <import resource="classpath*:myconfig/applicationContext-cache.xml"/>
     <import resource="classpath*:myconfig/applicationContext-springcache.xml"/>
